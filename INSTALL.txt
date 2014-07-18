@@ -1,0 +1,37 @@
+Installation
+============
+Copy the files to a folder.
+Add a IIS site instance, and point it to the folder where the compiled files reside.
+
+
+Configuration
+=============
+
+Databases
+---------
+Add database connections to the Web.config file. Between where it says <connectionStrings> ... </connectionStrings>, add a line like this:
+
+<add name="AbbotsfordConnection" connectionString="Data Source=.\SQLEXPRESS;Integrated Security=True;" providerName="System.Data.SqlClient" />
+
+Instances that are managed by SQL Express should be postfixed with their instance name, usually SQLEXPRESS, as above.
+If you are using a Microsoft SQL Server (IE, not an express version), with password authentication, use something like this:
+
+<add name="AbbotsfordConnection" connectionString="Data Source=192.168.1.20;Persist Security Info=True;User ID=AUser;Password=MyPass" providerName="System.Data.SqlClient" />
+
+Make sure mixed mode authentication for that server is enabled.
+
+Data Source should represent the server you are connecting to. All databases are accessable to this tool for backup and restore, currently.
+The name of the connection (AbbotsfordConnection, in our example), can be anything, and is displayed when selecting the connection to use.
+There can be more than one entry here, but the names must be unique.
+
+Authentication
+--------------
+The login information can be changed at the line stating the following:
+
+<user name="admin" password="pass" />
+
+Directories
+-----------
+You can change the directory used to contain backups modifying the following snippit in Web.config:
+
+<add key="BackupDirectory" value="C:\SQLBackups\" />
