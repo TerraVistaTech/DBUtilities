@@ -131,6 +131,9 @@ public partial class Restore : Page
                 + "ALTER DATABASE " + _DatabaseName + " SET Multi_User";
             SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection);
             sqlCommand.CommandType = CommandType.Text;
+
+            Utils.LogGlobal(Request.UserHostAddress + " restored database " + _DatabaseName + " from " + _BackupName);
+
             int iRows = sqlCommand.ExecuteNonQuery();
 
             sqlConnection.Close();

@@ -53,6 +53,8 @@ public partial class Download : System.Web.UI.Page
 
         Response.Flush();
 
+        Utils.LogGlobal(Request.UserHostAddress + " downloading " + file.Name);
+
         Response.TransmitFile(file.FullName);
 
         Response.End();

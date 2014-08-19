@@ -17,6 +17,7 @@ public partial class Login : System.Web.UI.Page
     {
         if(FormsAuthentication.Authenticate(txtUser.Text, txtPassword.Text))
         {
+            Utils.LogGlobal(Request.UserHostAddress + " logged in.");
             FormsAuthentication.RedirectFromLoginPage(txtUser.Text, chkPersistLogin.Checked);
         }
         else

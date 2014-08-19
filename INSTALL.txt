@@ -35,3 +35,4 @@ Directories
 You can change the directory used to contain backups modifying the following snippit in Web.config:
 
 <add key="BackupDirectory" value="C:\SQLBackups\" />
+<add key="LogDirectory" value="C:\SQLBackups\Logs\" />

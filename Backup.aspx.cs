@@ -112,6 +112,9 @@ public partial class Backup : Page
             string sqlQuery = "BACKUP DATABASE " + _DatabaseName + " TO DISK = '" + _BackupName + "' WITH FORMAT, NAME = '" + _BackupName + "';";
             SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection);
             sqlCommand.CommandType = CommandType.Text;
+
+            Utils.LogGlobal(Request.UserHostAddress + " backed up database " + _DatabaseName + " to " + _BackupName);
+
             int iRows = sqlCommand.ExecuteNonQuery();
 
             sqlConnection.Close();
