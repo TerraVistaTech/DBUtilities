@@ -16,6 +16,10 @@ public partial class Restore : Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (!bool.Parse(ConfigurationManager.AppSettings["EnableRestore"])) {
+            Response.RedirectPermanent("~");
+        }
+
         if (!Page.IsPostBack)
         {
             FillConnections();

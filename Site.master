@@ -31,7 +31,9 @@
         <form runat="server">
             <div id="menu">
                 <a class="btn" href="Backup">Backup</a>
-                <a class="btn" href="Restore">Restore</a>
+                <% if (bool.Parse(ConfigurationManager.AppSettings["EnableRestore"])) { %>
+                    <a class="btn" href="Restore">Restore</a>
+                <% } %>
                 <a class="btn" href="Download">Download</a>
             </div>
 
