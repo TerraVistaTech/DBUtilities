@@ -81,24 +81,9 @@ public partial class Restore : Page
 
         try
         {
-            SqlConnection sqlConnection = new SqlConnection();
-            sqlConnection.ConnectionString = _ConnectionString;
-            sqlConnection.Open();
-
-            string sqlQuery = "SELECT * FROM sys.databases";
-            SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection);
-            sqlCommand.CommandType = CommandType.Text;
-            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
-            DataSet dataSet = new DataSet();
-            sqlDataAdapter.Fill(dataSet);
-            var tables = dataSet.Tables[0];
-
-            foreach (DataRow row in tables.Rows)
+            foreach (String db in Utils.GetDBsForUser(_ConnectionString))
             {
-                if (!"master,msdb,model,tempdb".Split(',').Contains(row[0]))
-                {
-                    ddlDatabases.Items.Add(new ListItem(row["name"].ToString(), row["database_id"].ToString()));
-                }
+                ddlDatabases.Items.Add(new ListItem(db, db));
             }
         }
         catch (SqlException sqlException)
