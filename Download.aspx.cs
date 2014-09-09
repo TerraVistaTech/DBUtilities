@@ -21,9 +21,16 @@ public partial class Download : System.Web.UI.Page
     {
         try
         {
-            Directory.CreateDirectory(ConfigurationManager.AppSettings["BackupDirectory"]);
+            try
+            {
+                Directory.CreateDirectory(ConfigurationManager.AppSettings["DownloadDirectory"]);
+            }
+            catch (Exception _)
+            {
+                // Fine.
+            }
 
-            string[] files = Directory.GetFiles(ConfigurationManager.AppSettings["BackupDirectory"], "*.bak");
+            string[] files = Directory.GetFiles(ConfigurationManager.AppSettings["DownloadDirectory"], "*.bak");
             lstBackupfiles.DataSource = files;
             lstBackupfiles.DataBind();
             lstBackupfiles.SelectedIndex = 0;

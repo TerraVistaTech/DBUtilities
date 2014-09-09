@@ -88,7 +88,14 @@ public partial class Backup : Page
             string _DatabaseName = ddlDatabases.SelectedItem.Text;
             string _BackupName = Path.Combine(ConfigurationManager.AppSettings["BackupDirectory"], _DatabaseName + "_" + DateTime.Now.ToString("MMM.dd.yyyy.HHmm") + ".bak");
 
-            Directory.CreateDirectory(ConfigurationManager.AppSettings["BackupDirectory"]);
+            try
+            {
+                Directory.CreateDirectory(ConfigurationManager.AppSettings["BackupDirectory"]);
+            }
+            catch (Exception _)
+            {
+                // Fine.
+            }
 
             SqlConnection sqlConnection = new SqlConnection();
             sqlConnection.ConnectionString = _ConnectionString;
@@ -108,11 +115,11 @@ public partial class Backup : Page
         }
         catch (SqlException sqlException)
         {
-            lblMessage.Text = sqlException.Message.ToString();
+            lblMessage.Text = "SQL error: " + sqlException.Message.ToString();
         }
         catch (Exception exception)
         {
-            lblMessage.Text = exception.Message.ToString();
+            lblMessage.Text = "General error: " + exception.Message.ToString();
         }
     }
 

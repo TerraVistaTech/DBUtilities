@@ -55,9 +55,16 @@ public partial class Restore : Page
     {
         try
         {
-            Directory.CreateDirectory(ConfigurationManager.AppSettings["BackupDirectory"]);
+            try
+            {
+                Directory.CreateDirectory(ConfigurationManager.AppSettings["DownloadDirectory"]);
+            }
+            catch (Exception _)
+            {
+                // Fine.
+            }
 
-            string[] files = Directory.GetFiles(ConfigurationManager.AppSettings["BackupDirectory"], "*.bak");
+            string[] files = Directory.GetFiles(ConfigurationManager.AppSettings["DownloadDirectory"], "*.bak");
             lstBackupfiles.DataSource = files;
             lstBackupfiles.DataBind();
             lstBackupfiles.SelectedIndex = 0;
@@ -88,11 +95,11 @@ public partial class Restore : Page
         }
         catch (SqlException sqlException)
         {
-            lblMessage.Text = sqlException.Message.ToString();
+            lblMessage.Text = "SQL error: " + sqlException.Message.ToString();
         }
         catch (Exception exception)
         {
-            lblMessage.Text = exception.Message.ToString();
+            lblMessage.Text = "General error: " + exception.Message.ToString();
         }
     }
 
@@ -132,11 +139,11 @@ public partial class Restore : Page
         }
         catch (SqlException sqlException)
         {
-            lblMessage.Text = sqlException.Message.ToString();
+            lblMessage.Text = "SQL error: " + sqlException.Message.ToString();
         }
         catch (Exception exception)
         {
-            lblMessage.Text = exception.Message.ToString();
+            lblMessage.Text = "General error: " + exception.Message.ToString();
         }
     }
 
