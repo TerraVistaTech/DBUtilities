@@ -74,6 +74,15 @@ public partial class Backup : Page
         }
     }
 
+    private String processFile()
+    {
+        String connection = ddlConnections.SelectedItem.Text;
+        String database = ddlDatabases.SelectedItem.Text;
+        String dir = ConfigurationManager.AppSettings["DownloadDirectory"];
+
+        return Path.Combine(dir, connection + "_" + database + ".progress");
+    }
+
     protected void btnBackup_Click(object sender, EventArgs e)
     {
         _ConnectionString = ddlConnections.SelectedValue;
@@ -101,21 +110,35 @@ public partial class Backup : Page
             sqlConnection.ConnectionString = _ConnectionString;
             sqlConnection.Open();
 
-            string sqlQuery = "BACKUP DATABASE " + _DatabaseName + " TO DISK = '" + _BackupName + "' WITH FORMAT, NAME = '" + _BackupName + "';";
-            SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection);
-            sqlCommand.CommandType = CommandType.Text;
+            using (new FileStream(processFile(), FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 1, FileOptions.DeleteOnClose))
+            {
+                string sqlQuery = "BACKUP DATABASE " + _DatabaseName + " TO DISK = '" + _BackupName + "' WITH FORMAT, NAME = '" + _BackupName + "';";
+                SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection);
+                sqlCommand.CommandType = CommandType.Text;
 
-            Utils.LogGlobal(Request.UserHostAddress + " backed up database " + _DatabaseName + " to " + _BackupName);
+                Utils.LogGlobal(Request.UserHostAddress + " backed up database " + _DatabaseName + " to " + _BackupName);
 
-            int iRows = sqlCommand.ExecuteNonQuery();
+                int iRows = sqlCommand.ExecuteNonQuery();
 
-            sqlConnection.Close();
+                sqlConnection.Close();
+            }
 
             lblMessage.Text = _DatabaseName + " was backed up to '" + _BackupName + "' successfully...";
         }
         catch (SqlException sqlException)
         {
             lblMessage.Text = "SQL error: " + sqlException.Message.ToString();
+        }
+        catch (IOException exception)
+        {
+            if (exception.Message.Contains("already exists"))
+            {
+                lblMessage.Text = "Backup error: A backup for this database is already in progress.";
+            }
+            else
+            {
+                lblMessage.Text = "General error: " + exception.Message;
+            }
         }
         catch (Exception exception)
         {
