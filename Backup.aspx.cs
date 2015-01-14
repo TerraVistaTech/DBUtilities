@@ -112,7 +112,19 @@ public partial class Backup : Page
 
             using (new FileStream(processFile(), FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 1, FileOptions.DeleteOnClose))
             {
-                string sqlQuery = "BACKUP DATABASE " + _DatabaseName + " TO DISK = '" + _BackupName + "' WITH FORMAT, NAME = '" + _BackupName + "';";
+                string compression = "";
+                try
+                {
+                    Console.WriteLine("Looking!");
+                    compression = !Boolean.Parse(ConfigurationManager.AppSettings["UseCompression_" + ddlConnections.SelectedItem.Text ]) ? ", COMPRESSION" : "";
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Not found!");
+                    // Default to no compression if malformed or not existant.
+                }
+
+                string sqlQuery = "BACKUP DATABASE " + _DatabaseName + " TO DISK = '" + _BackupName + "' WITH FORMAT" + compression + ", NAME = '" + _BackupName + "';";
                 SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection);
                 sqlCommand.CommandType = CommandType.Text;
 

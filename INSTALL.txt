@@ -16,7 +16,7 @@ Add database connections to the Web.config file. Between where it says `<connect
 
 Instances that are managed by SQL Express should be postfixed with their instance name, usually SQLEXPRESS, as above.
 
-If you are using a Microsoft SQL Server (IE, not an express version), with password authentication, use something like this:
+If you are using a Microsoft SQL Server (IE, not an Express version), with password authentication, use something like this:
 
 `<add name="AbbotsfordConnection" connectionString="Data Source=192.168.1.20;Persist Security Info=True;User ID=AUser;Password=MyPass" providerName="System.Data.SqlClient" />`
 
@@ -54,3 +54,11 @@ Notes
 
 * This application requires root/superuser access to the `master` table to restore databases.
 * When restoring a database, any connections to that database will be forcefully rolled back and terminated.
+
+Compression
+-----------
+
+Compression can be enabled for DB backups on a per-connection basis, but it is only valid on SQL Server installs. SQL Express does not support compression.
+
+In Web.config, add `<add key="UseCompression_<ConnectionName>" value="true" />` underneath the directory config directives, where `<ConnectionName>` matches 
+the case-sensitive name of the connectionstring of the server you wish to target. If not specified, defaults to `false`.
