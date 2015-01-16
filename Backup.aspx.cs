@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -20,6 +21,8 @@ public partial class Backup : Page
         {
             FillConnections();
         }
+
+        ddlDatabases.BackColor = Color.LightGray;
     }
 
     private void FillConnections()
@@ -72,6 +75,9 @@ public partial class Backup : Page
         {
             lblMessage.Text = exception.Message.ToString();
         }
+
+        ddlDatabases.Enabled = true;
+        ddlDatabases.BackColor = Color.White;
     }
 
     private String processFile()
@@ -115,12 +121,19 @@ public partial class Backup : Page
                 string compression = "";
                 try
                 {
-                    Console.WriteLine("Looking!");
-                    compression = !Boolean.Parse(ConfigurationManager.AppSettings["UseCompression_" + ddlConnections.SelectedItem.Text ]) ? ", COMPRESSION" : "";
+                    compression = Boolean.Parse(ConfigurationManager.AppSettings["UseCompression_" + ddlConnections.SelectedItem.Text ]) ? ", COMPRESSION" : "";
+                    if (!compression.Equals(""))
+                    {
+                        Utils.LogGlobal("Using compression.");
+                    }
+                    else
+                    {
+                        Utils.LogGlobal("Not using compression: configuration entry forbids it.");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Not found!");
+                    Utils.LogGlobal("Not using compression: no specific entry found in configuration was found to enable compression for this connection.");
                     // Default to no compression if malformed or not existant.
                 }
 
@@ -128,14 +141,14 @@ public partial class Backup : Page
                 SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection);
                 sqlCommand.CommandType = CommandType.Text;
 
-                Utils.LogGlobal(Request.UserHostAddress + " backed up database " + _DatabaseName + " to " + _BackupName);
+                Utils.LogGlobal(Request.UserHostAddress + " backed up database " + _DatabaseName + " to " + _BackupName + ". Query was: " + sqlQuery);
 
                 int iRows = sqlCommand.ExecuteNonQuery();
 
                 sqlConnection.Close();
             }
 
-            lblMessage.Text = _DatabaseName + " was backed up to '" + _BackupName + "' successfully...";
+            lblMessage.Text = _DatabaseName + " was backed up to '" + _BackupName + "' successfully.<br />It may take 15 seconds or more for the backup to appear in the download listing.";
         }
         catch (SqlException sqlException)
         {

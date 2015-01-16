@@ -29,16 +29,29 @@
 
     <body>
         <form runat="server">
-            <div id="menu">
-                <a class="btn" href="Backup">Backup</a>
-                <% if (bool.Parse(ConfigurationManager.AppSettings["EnableRestore"])) { %>
-                    <a class="btn" href="Restore">Restore</a>
-                <% } %>
-                <a class="btn" href="Download">Download</a>
-            </div>
-
-            <asp:ContentPlaceHolder id="content" runat="server">
-            </asp:ContentPlaceHolder>
+            <table id="contentHolder" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td id="header"colspan="2">
+                        <asp:Image CssClass="logo" ImageUrl="~/imgs/logo.png" runat="server" />
+                        <h1 class="center">SIS SQL Backup ondemand</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="menu">
+                        <div>
+                            <a href="Backup">Backup</a><br />
+                            <% if (bool.Parse(ConfigurationManager.AppSettings["EnableRestore"])) { %>
+                                <a href="Restore">Restore</a><br />
+                            <% } %>
+                            <a href="Download">Download</a><br />
+                        </div>
+                    </td>
+                    <td id="pageContent">
+                        <asp:ContentPlaceHolder id="content" runat="server">
+                        </asp:ContentPlaceHolder>
+                    </td>
+                </tr>
+            </table>
         </form>
     </body>
 </html>

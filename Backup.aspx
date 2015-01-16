@@ -1,18 +1,32 @@
-﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Backup.aspx.cs" Inherits="Backup" %>
+﻿<%@ Page Title="SIS SQL Backup ondemand" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Backup.aspx.cs" Inherits="Backup" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="content" Runat="Server">
     <div>
-        <asp:DropDownList ID="ddlConnections" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlConnections_SelectedIndexChanged">
-        </asp:DropDownList>
-
-        <div id="backup">
-            <asp:DropDownList ID="ddlDatabases" runat="server">
-            </asp:DropDownList>
-
-            <br />
-
-            <asp:Button CssClass="btn" ID="btnBackup" runat="server" UseSubmitBehavior="true" Text="Backup" OnClick="btnBackup_Click" />
-        </div>
+        <table class="center">
+            <tr>
+                <td colspan="2">
+                    Please select a server and a database.
+                </td>
+            </tr>
+            <tr>
+                <td class="textright">Server connection:</td>
+                <td class="textleft">
+                    <asp:DropDownList ID="ddlConnections" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlConnections_SelectedIndexChanged">
+                    </asp:DropDownList>
+                </td>
+            </tr>
+            <tr>
+                <td class="right">Database:</td>
+                <td class="textleft"><asp:DropDownList Enabled="false" CssClass="fullWidth" ID="ddlDatabases" runat="server"></asp:DropDownList></td>
+            </tr>
+            <tr>
+                <td class="center" colspan="2">
+                    <asp:Button CssClass="btn" ID="btnBackup" runat="server" UseSubmitBehavior="true" Text="Backup" OnClick="btnBackup_Click" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><asp:Label CssClass="center" ID="lblMessage" ForeColor="Red" runat="server" Text="" /></td>
+            </tr>
+        </table>
     </div>
-    <p><asp:Label ID="lblMessage" ForeColor="Red" runat="server" Text=""></asp:Label></p>
 </asp:Content>
